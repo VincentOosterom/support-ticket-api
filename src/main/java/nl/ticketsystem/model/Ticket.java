@@ -1,9 +1,6 @@
-package nl.ticketsystem.model.ticket;
+package nl.ticketsystem.model;
 
 import jakarta.persistence.*;
-import nl.ticketsystem.model.Priority;
-import nl.ticketsystem.model.TicketStatus;
-import nl.ticketsystem.model.user.User;
 
 import java.time.LocalDateTime;
 import java.util.List;

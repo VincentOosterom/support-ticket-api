@@ -1,8 +1,6 @@
-package nl.ticketsystem.model.user;
+package nl.ticketsystem.model;
 
 import jakarta.persistence.*;
-import nl.ticketsystem.model.Priority;
-import nl.ticketsystem.model.Role;
 
 import java.util.List;
 
