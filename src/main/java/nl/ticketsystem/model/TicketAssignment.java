@@ -49,7 +49,7 @@ public class TicketAssignment {
         return agent;
     }
 
-    public void setUser(User agent) {
+    public void setAgent(User agent) {
         this.agent = agent;
     }
 }

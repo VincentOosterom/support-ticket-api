@@ -6,8 +6,8 @@ import nl.ticketsystem.model.TicketAssignment;
 public class TicketAssignmentResponseDTO {
 
     private Long id;
-    private String ticketId;
-    private String agentId;
+    private Long ticketId;
+    private Long agentId;
 
     public TicketAssignmentResponseDTO() {
 
@@ -21,19 +21,19 @@ public class TicketAssignmentResponseDTO {
         this.id = id;
     }
 
-    public String getTicketId() {
+    public Long getTicketId() {
         return ticketId;
     }
 
-    public void setTicketId(String ticketId) {
+    public void setTicketId(Long ticketId) {
         this.ticketId = ticketId;
     }
 
-    public String getAgentId() {
+    public Long getAgentId() {
         return agentId;
     }
 
-    public void setAgentId(String agentId) {
+    public void setAgentId(Long agentId) {
         this.agentId = agentId;
     }
 }
