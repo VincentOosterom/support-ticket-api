@@ -4,6 +4,7 @@ import nl.ticketsystem.dto.ticket.TicketRequestDTO;
 import nl.ticketsystem.dto.ticket.TicketResponseDTO;
 import nl.ticketsystem.mapper.TicketMapper;
 import nl.ticketsystem.model.Ticket;
+import nl.ticketsystem.model.TicketStatus;
 import nl.ticketsystem.model.User;
 import nl.ticketsystem.repository.TicketRepository;
 import nl.ticketsystem.repository.UserRepository;
@@ -43,7 +44,14 @@ public class TicketService {
         return ticketMapper.mapToDto(savedTicket);
     }
 
-    public void deleteTicket(Long id){
+    public TicketResponseDTO updateTicketStatus(Long id, TicketStatus newStatus) {
+        Ticket ticket = ticketRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Ticket niet gevonden"));
+        ticket.setStatus(newStatus);
+        return ticketMapper.mapToDto(ticketRepository.save(ticket));
+    }
+
+    public void deleteTicket(Long id) {
         ticketRepository.deleteById(id);
     }
 }
