@@ -37,7 +37,7 @@ public class AttachmentService {
     public AttachmentResponseDTO createAttachment(AttachmentRequestDTO dto) {
         Ticket ticket = ticketRepository.findById(dto.getTicketId())
                 .orElseThrow(() -> new RuntimeException("Ticket niet gevonden"));
-        Attachment attachment = attachmentMapper.mapToDto(dto);
+        Attachment attachment = attachmentMapper.mapToEntity(dto);
         attachment.setTicket(ticket);
         Attachment savedAttachment = attachmentRepository.save(attachment);
         return attachmentMapper.mapToDto(savedAttachment);
