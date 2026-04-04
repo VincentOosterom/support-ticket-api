@@ -19,7 +19,7 @@ public class Attachment {
     private String fileType;
 
     @Column(nullable = false)
-    private String fileSize;
+    private Long fileSize;
 
     @Column(nullable = false)
     private LocalDateTime uploadDate;
@@ -28,7 +28,7 @@ public class Attachment {
     @JoinColumn(name = "ticket_id", nullable = false)
     private Ticket ticket;
 
-    public Attachment(Long id, String fileName, String fileType, String fileSize, LocalDateTime uploadDate, Ticket ticket) {
+    public Attachment(Long id, String fileName, String fileType, Long fileSize, LocalDateTime uploadDate, Ticket ticket) {
         this.id = id;
         this.fileName = fileName;
         this.fileType = fileType;
@@ -65,11 +65,11 @@ public class Attachment {
         this.fileType = fileType;
     }
 
-    public String getFileSize() {
+    public Long getFileSize() {
         return fileSize;
     }
 
-    public void setFileSize(String fileSize) {
+    public void setFileSize(Long fileSize) {
         this.fileSize = fileSize;
     }
 

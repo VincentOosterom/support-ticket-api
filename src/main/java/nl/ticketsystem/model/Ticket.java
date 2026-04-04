@@ -21,14 +21,14 @@ public class Ticket {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TicketStatus ticketStatus;
+    private TicketStatus status;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Priority priority;
 
     @Column(nullable = false)
-    private LocalDateTime localDateTime;
+    private LocalDateTime createdAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -41,19 +41,19 @@ public class Ticket {
     private List<Attachment> attachments;
 
     @OneToMany(mappedBy = "ticket")
-    private List<History> histories;
+    private List<TicketHistory> histories;
 
     public Ticket() {
 
     }
 
-    public Ticket(Long id, String subject, String description, TicketStatus ticketStatus, Priority priority, LocalDateTime localDateTime, User user, List<Comment> comments, List<Attachment> attachments, List<History> histories) {
+    public Ticket(Long id, String subject, String description, TicketStatus status, Priority priority, LocalDateTime createdAt, User user, List<Comment> comments, List<Attachment> attachments, List<TicketHistory> histories) {
         this.id = id;
         this.subject = subject;
         this.description = description;
-        this.ticketStatus = ticketStatus;
+        this.status = status;
         this.priority = priority;
-        this.localDateTime = localDateTime;
+        this.createdAt = createdAt;
         this.user = user;
         this.comments = comments;
         this.attachments = attachments;
@@ -84,12 +84,12 @@ public class Ticket {
         this.description = description;
     }
 
-    public TicketStatus getTicketStatus() {
-        return ticketStatus;
+    public TicketStatus getStatus() {
+        return status;
     }
 
-    public void setTicketStatus(TicketStatus ticketStatus) {
-        this.ticketStatus = ticketStatus;
+    public void setStatus(TicketStatus ticketStatus) {
+        this.status = ticketStatus;
     }
 
     public Priority getPriority() {
@@ -100,12 +100,12 @@ public class Ticket {
         this.priority = priority;
     }
 
-    public LocalDateTime getLocalDateTime() {
-        return localDateTime;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setLocalDateTime(LocalDateTime localDateTime) {
-        this.localDateTime = localDateTime;
+    public void setCreatedAt(LocalDateTime localDateTime) {
+        this.createdAt = localDateTime;
     }
 
     public User getUser() {
@@ -132,11 +132,11 @@ public class Ticket {
         this.attachments = attachments;
     }
 
-    public List<History> getHistories() {
+    public List<TicketHistory> getHistories() {
         return histories;
     }
 
-    public void setHistories(List<History> histories) {
+    public void setHistories(List<TicketHistory> histories) {
         this.histories = histories;
     }
 }
