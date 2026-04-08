@@ -2,6 +2,7 @@ package nl.ticketsystem.service;
 
 import nl.ticketsystem.dto.comment.CommentRequestDTO;
 import nl.ticketsystem.dto.comment.CommentResponseDTO;
+import nl.ticketsystem.exception.ResourceNotFoundException;
 import nl.ticketsystem.mapper.CommentMapper;
 import nl.ticketsystem.model.Comment;
 import nl.ticketsystem.model.Ticket;
@@ -34,20 +35,24 @@ public class CommentService {
 
     public CommentResponseDTO getCommentById(Long id){
         Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Comment niet gevonden"));
+                .orElseThrow(() -> new ResourceNotFoundException("Comment niet gevonden"));
         return commentMapper.mapToDto(comment);
     }
 
     public CommentResponseDTO createComment(CommentRequestDTO dto){
         Ticket ticket = ticketRepository.findById(dto.getTicketId())
-                .orElseThrow(() -> new RuntimeException("Ticket niet gevonden"));
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket niet gevonden"));
         User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new RuntimeException("User niet gevonden"));
+                .orElseThrow(() -> new ResourceNotFoundException("User niet gevonden"));
         Comment comment = commentMapper.mapToEntity(dto);
         comment.setTicket(ticket);
         comment.setUser(user);
         Comment savedComment = commentRepository.save(comment);
         return commentMapper.mapToDto(savedComment);
+    }
+
+    public List<CommentResponseDTO>getCommentsByTicketId(Long ticketId){
+        return commentMapper.mapToDto(commentRepository.findByTicketId(ticketId));
     }
 
     public void deleteComment(Long id) {

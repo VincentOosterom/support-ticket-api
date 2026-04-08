@@ -3,6 +3,7 @@ package nl.ticketsystem.service;
 import nl.ticketsystem.dto.attachment.AttachmentResponseDTO;
 import nl.ticketsystem.dto.ticket_assignment.TicketAssignmentRequestDTO;
 import nl.ticketsystem.dto.ticket_assignment.TicketAssignmentResponseDTO;
+import nl.ticketsystem.exception.ResourceNotFoundException;
 import nl.ticketsystem.mapper.TicketAssignmentMapper;
 import nl.ticketsystem.model.Ticket;
 import nl.ticketsystem.model.TicketAssignment;
@@ -35,20 +36,24 @@ public class TicketAssignmentService {
 
     public TicketAssignmentResponseDTO getAssignmentById(Long id) {
         TicketAssignment ticketAssignment = ticketAssignmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("TicketAssignment niet gevonden"));
+                .orElseThrow(() -> new ResourceNotFoundException("TicketAssignment niet gevonden"));
         return ticketAssignmentMapper.mapToDto(ticketAssignment);
     }
 
     public TicketAssignmentResponseDTO createAssignment(TicketAssignmentRequestDTO dto){
         Ticket ticket = ticketRepository.findById(dto.getTicketId())
-                .orElseThrow(() -> new RuntimeException("Ticket niet gevonden"));
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket niet gevonden"));
         User agent = userRepository.findById(dto.getAgentId())
-                .orElseThrow(() -> new RuntimeException("Agent niet gevonden"));
+                .orElseThrow(() -> new ResourceNotFoundException("Agent niet gevonden"));
         TicketAssignment ticketAssignment = ticketAssignmentMapper.mapToEntity(dto);
         ticketAssignment.setTicket(ticket);
         ticketAssignment.setAgent(agent);
         TicketAssignment savedAssignment = ticketAssignmentRepository.save(ticketAssignment);
         return ticketAssignmentMapper.mapToDto(savedAssignment);
+    }
+
+    public List<TicketAssignmentResponseDTO>getAssignmentsByTicketId(Long ticketId){
+        return ticketAssignmentMapper.mapToDto(ticketAssignmentRepository.findByTicketId(ticketId));
     }
 
     public void deleteAssignment(Long id) {

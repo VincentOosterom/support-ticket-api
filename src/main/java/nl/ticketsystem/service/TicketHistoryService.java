@@ -2,6 +2,7 @@ package nl.ticketsystem.service;
 
 import nl.ticketsystem.dto.history.TicketHistoryRequestDTO;
 import nl.ticketsystem.dto.history.TicketHistoryResponseDTO;
+import nl.ticketsystem.exception.ResourceNotFoundException;
 import nl.ticketsystem.mapper.TicketHistoryMapper;
 import nl.ticketsystem.model.Ticket;
 import nl.ticketsystem.model.TicketHistory;
@@ -34,20 +35,24 @@ public class TicketHistoryService {
 
     public TicketHistoryResponseDTO getTicketHistoryById(Long id) {
         TicketHistory ticketHistory = ticketHistoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("TicketHistory niet gevonden"));
+                .orElseThrow(() -> new ResourceNotFoundException("TicketHistory niet gevonden"));
         return ticketHistoryMapper.mapToDto(ticketHistory);
 
     }
 
     public TicketHistoryResponseDTO createTicketHistory(TicketHistoryRequestDTO dto) {
         Ticket ticket = ticketRepository.findById(dto.getTicketId())
-                .orElseThrow(() -> new RuntimeException("Ticket niet gevonden"));
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket niet gevonden"));
         User changedBy = userRepository.findById(dto.getChangeById())
-                .orElseThrow(() -> new RuntimeException("User niet gevonden"));
+                .orElseThrow(() -> new ResourceNotFoundException("User niet gevonden"));
         TicketHistory ticketHistory = ticketHistoryMapper.mapToEntity(dto);
         ticketHistory.setTicket(ticket);
         ticketHistory.setChangedBy(changedBy);
         TicketHistory savedTicketHistory = ticketHistoryRepository.save(ticketHistory);
         return ticketHistoryMapper.mapToDto(savedTicketHistory);
+    }
+
+    public List<TicketHistoryResponseDTO> getTicketHistoryByTicketId(Long ticketId) {
+        return ticketHistoryMapper.mapToDto(ticketHistoryRepository.findByTicketId(ticketId));
     }
 }

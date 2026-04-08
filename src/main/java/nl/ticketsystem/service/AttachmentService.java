@@ -2,6 +2,7 @@ package nl.ticketsystem.service;
 
 import nl.ticketsystem.dto.attachment.AttachmentRequestDTO;
 import nl.ticketsystem.dto.attachment.AttachmentResponseDTO;
+import nl.ticketsystem.exception.ResourceNotFoundException;
 import nl.ticketsystem.mapper.AttachmentMapper;
 import nl.ticketsystem.model.Attachment;
 import nl.ticketsystem.model.Ticket;
@@ -30,17 +31,21 @@ public class AttachmentService {
 
     public AttachmentResponseDTO getAttachmentById(Long id) {
         Attachment attachment = attachmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Attachment niet gevonden"));
+                .orElseThrow(() -> new ResourceNotFoundException("Attachment niet gevonden"));
         return attachmentMapper.mapToDto(attachment);
     }
 
     public AttachmentResponseDTO createAttachment(AttachmentRequestDTO dto) {
         Ticket ticket = ticketRepository.findById(dto.getTicketId())
-                .orElseThrow(() -> new RuntimeException("Ticket niet gevonden"));
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket niet gevonden"));
         Attachment attachment = attachmentMapper.mapToEntity(dto);
         attachment.setTicket(ticket);
         Attachment savedAttachment = attachmentRepository.save(attachment);
         return attachmentMapper.mapToDto(savedAttachment);
+    }
+
+    public List<AttachmentResponseDTO> getAttachmentsByTicketId(Long ticketId) {
+        return attachmentMapper.mapToDto(attachmentRepository.findByTicketId(ticketId));
     }
 
     public void deleteAttachment(Long id) {

@@ -2,6 +2,7 @@ package nl.ticketsystem.service;
 
 import nl.ticketsystem.dto.user.UserRequestDTO;
 import nl.ticketsystem.dto.user.UserResponseDTO;
+import nl.ticketsystem.exception.ResourceNotFoundException;
 import nl.ticketsystem.mapper.UserMapper;
 import nl.ticketsystem.model.User;
 import nl.ticketsystem.repository.UserRepository;
@@ -27,7 +28,7 @@ public class UserService {
 
     public UserResponseDTO getUserById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User niet gevonden"));
+                .orElseThrow(() -> new ResourceNotFoundException("User niet gevonden"));
         return userMapper.mapToDto(user);
     }
 
