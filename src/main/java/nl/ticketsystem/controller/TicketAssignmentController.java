@@ -2,6 +2,7 @@ package nl.ticketsystem.controller;
 
 import nl.ticketsystem.dto.ticket_assignment.TicketAssignmentRequestDTO;
 import nl.ticketsystem.dto.ticket_assignment.TicketAssignmentResponseDTO;
+import nl.ticketsystem.model.TicketAssignment;
 import nl.ticketsystem.service.TicketAssignmentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,12 @@ public class TicketAssignmentController {
     @GetMapping("/{id}")
     public ResponseEntity<TicketAssignmentResponseDTO> getAssignmentById(@PathVariable Long id) {
         return ResponseEntity.ok(ticketAssignmentService.getAssignmentById(id));
+    }
+
+    @PutMapping("/ticket/{ticketId}")
+    public ResponseEntity<TicketAssignmentResponseDTO> updateAssignment(@PathVariable Long ticketId, @RequestParam Long newAgentId) {
+        return ResponseEntity.ok(ticketAssignmentService.updateAssignment(ticketId, newAgentId));
+
     }
 
     @PostMapping

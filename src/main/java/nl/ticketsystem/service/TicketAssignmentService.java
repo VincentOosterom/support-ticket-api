@@ -40,7 +40,7 @@ public class TicketAssignmentService {
         return ticketAssignmentMapper.mapToDto(ticketAssignment);
     }
 
-    public TicketAssignmentResponseDTO createAssignment(TicketAssignmentRequestDTO dto){
+    public TicketAssignmentResponseDTO createAssignment(TicketAssignmentRequestDTO dto) {
         Ticket ticket = ticketRepository.findById(dto.getTicketId())
                 .orElseThrow(() -> new ResourceNotFoundException("Ticket niet gevonden"));
         User agent = userRepository.findById(dto.getAgentId())
@@ -52,8 +52,20 @@ public class TicketAssignmentService {
         return ticketAssignmentMapper.mapToDto(savedAssignment);
     }
 
-    public List<TicketAssignmentResponseDTO>getAssignmentsByTicketId(Long ticketId){
+    public List<TicketAssignmentResponseDTO> getAssignmentsByTicketId(Long ticketId) {
         return ticketAssignmentMapper.mapToDto(ticketAssignmentRepository.findByTicketId(ticketId));
+    }
+
+    public TicketAssignmentResponseDTO updateAssignment(Long ticketId, Long newAgentId) {
+        TicketAssignment assignment =ticketAssignmentRepository.findFirstByTicketId(ticketId)
+                .orElseThrow(()-> new ResourceNotFoundException("Toewijzing niet gevonden voor ticket:" + ticketId));
+
+        User newAgent = userRepository.findById(newAgentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Agent met dit id" + newAgentId + "niet gevonden"));
+
+        assignment.setAgent(newAgent);
+        TicketAssignment savedAssignment = ticketAssignmentRepository.save(assignment);
+        return ticketAssignmentMapper.mapToDto(savedAssignment);
     }
 
     public void deleteAssignment(Long id) {
