@@ -1,13 +1,11 @@
 package nl.ticketsystem.dto.user;
 
-import nl.ticketsystem.model.Role;
-
 public class UserResponseDTO {
 
     private Long id;
     private String name;
     private String email;
-    private Role role;
+    private String keycloakId;
 
     public UserResponseDTO() {
 
@@ -37,11 +35,11 @@ public class UserResponseDTO {
         this.email = email;
     }
 
-    public Role getRole() {
-        return role;
+    public String getKeycloakId() {
+        return keycloakId;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setKeycloakId(String keycloakId) {
+        this.keycloakId = keycloakId;
     }
 }

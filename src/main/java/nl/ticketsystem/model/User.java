@@ -18,12 +18,8 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
-    private String password;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role;
+    @Column(nullable = false, unique = true)
+    private String keycloakId;
 
     @OneToMany(mappedBy = "user")
     private List<Ticket> tickets;
@@ -32,13 +28,12 @@ public class User {
 
     }
 
-    public User(Long id, String name, String email, String password, Role role, List<Ticket> tickets) {
+    public User(Long id, String name, String email, List<Ticket> tickets, String keycloakId) {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.password = password;
-        this.role = role;
         this.tickets = tickets;
+        this.keycloakId = keycloakId;
     }
 
     public Long getId() {
@@ -65,27 +60,19 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
     public List<Ticket> getTickets() {
         return tickets;
     }
 
     public void setTickets(List<Ticket> tickets) {
         this.tickets = tickets;
+    }
+
+    public String getKeycloakId() {
+        return keycloakId;
+    }
+
+    public void setKeycloakId(String keycloakId) {
+        this.keycloakId = keycloakId;
     }
 }

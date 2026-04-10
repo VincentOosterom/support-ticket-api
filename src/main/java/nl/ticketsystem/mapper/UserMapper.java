@@ -16,7 +16,7 @@ public class UserMapper implements DTOMapper<UserResponseDTO, UserRequestDTO, Us
         dto.setId(user.getId());
         dto.setName(user.getName());
         dto.setEmail(user.getEmail());
-        dto.setRole(user.getRole());
+        dto.setKeycloakId(user.getKeycloakId());
         return dto;
     }
 
@@ -32,8 +32,7 @@ public class UserMapper implements DTOMapper<UserResponseDTO, UserRequestDTO, Us
         User user = new User();
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
-        user.setPassword(dto.getPassword());
-        user.setRole(dto.getRole());
+        user.setKeycloakId(dto.getKeycloakId());
         return user;
     }
 }
