@@ -39,6 +39,12 @@ public class UserService {
                 });
     }
 
+    public UserResponseDTO getMe(String keycloakId) {
+        User user = userRepository.findByKeycloakId(keycloakId)
+                .orElseThrow(() -> new ResourceNotFoundException("User niet gevonden"));
+        return userMapper.mapToDto(user);
+    }
+
     public UserResponseDTO getUserById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User niet gevonden"));

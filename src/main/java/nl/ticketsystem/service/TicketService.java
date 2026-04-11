@@ -11,6 +11,8 @@ import nl.ticketsystem.model.TicketStatus;
 import nl.ticketsystem.model.User;
 import nl.ticketsystem.repository.TicketRepository;
 import nl.ticketsystem.repository.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -33,7 +35,18 @@ public class TicketService {
         this.ticketStatusValidator = ticketStatusValidator;
     }
 
-    public List<TicketResponseDTO> getAllTickets() {
+    public List<TicketResponseDTO> getAllTickets(Authentication authentication) {
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String keycloakId = jwt.getSubject();
+        boolean isCustomer = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_CUSTOMER"));
+
+        if (isCustomer) {
+            User user = userRepository.findByKeycloakId(keycloakId)
+                    .orElseThrow(() -> new ResourceNotFoundException("User niet gevonden"));
+            return ticketMapper.mapToDto(ticketRepository.findByUser(user));
+        }
+
         return ticketMapper.mapToDto(ticketRepository.findAll());
     }
 

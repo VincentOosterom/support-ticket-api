@@ -45,17 +45,21 @@ public class SecurityConfig {
                                 .decoder(jwtDecoder())
                         ))
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.POST, "/users/sync").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/users/me").authenticated()
                         .requestMatchers(HttpMethod.GET, "/users/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/users/sync").authenticated()
-
-                        .requestMatchers(HttpMethod.POST, "/tickets").hasRole("CUSTOMER")
-                        .requestMatchers(HttpMethod.GET, "/tickets/**").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/tickets/**").hasAnyRole("AGENT", "ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/tickets/**").hasRole("ADMIN")
 
                         .requestMatchers(HttpMethod.POST, "/tickets/*/comments").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/tickets/*/comments/**").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.POST, "/tickets").hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.GET, "/tickets/priority/**").hasAnyRole("AGENT", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/tickets/users/**").hasAnyRole("AGENT", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/tickets").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/tickets/**").hasAnyRole("AGENT", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/tickets/**").hasAnyRole("AGENT", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/tickets/**").hasRole("ADMIN")
 
                         .requestMatchers(HttpMethod.POST, "/attachments/**").hasAnyRole("CUSTOMER", "AGENT")
                         .requestMatchers(HttpMethod.GET, "/attachments/**").authenticated()

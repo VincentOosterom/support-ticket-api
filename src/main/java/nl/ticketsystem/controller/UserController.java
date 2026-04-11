@@ -32,6 +32,13 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<UserResponseDTO> getMe(Authentication authentication) {
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String keycloakId = jwt.getSubject();
+        return ResponseEntity.ok(userService.getMe(keycloakId));
+    }
+
     @PostMapping("/sync")
     public ResponseEntity<UserResponseDTO> syncUser(Authentication authentication) {
         Jwt jwt = (Jwt) authentication.getPrincipal();
