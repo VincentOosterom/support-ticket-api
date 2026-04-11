@@ -18,6 +18,7 @@ public class AttachmentMapper implements DTOMapper<AttachmentResponseDTO, Attach
         dto.setId(attachment.getId());
         dto.setFileName(attachment.getFileName());
         dto.setFileType(attachment.getFileType());
+        dto.setFilePath(attachment.getFilePath());
         dto.setFileSize(attachment.getFileSize());
         dto.setUploadDate(attachment.getUploadDate());
         dto.setTicketId(attachment.getTicket().getId());

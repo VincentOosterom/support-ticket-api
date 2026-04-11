@@ -9,6 +9,7 @@ public class AttachmentRequestDTO {
     private Long fileSize;
     private Long ticketId;
 
+
     public AttachmentRequestDTO() {
 
     }

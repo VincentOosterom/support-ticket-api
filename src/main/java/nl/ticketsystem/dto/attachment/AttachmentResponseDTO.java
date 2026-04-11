@@ -9,8 +9,10 @@ public class AttachmentResponseDTO {
     private String fileName;
     private String fileType;
     private Long fileSize;
+    private String filePath;
     private LocalDateTime uploadDate;
     private Long ticketId;
+
 
     public AttachmentResponseDTO() {
 
@@ -62,5 +64,13 @@ public class AttachmentResponseDTO {
 
     public void setTicketId(Long ticketId) {
         this.ticketId = ticketId;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 }

@@ -9,8 +9,15 @@ import nl.ticketsystem.model.Ticket;
 import nl.ticketsystem.repository.AttachmentRepository;
 import nl.ticketsystem.repository.TicketRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class AttachmentService {
@@ -35,13 +42,31 @@ public class AttachmentService {
         return attachmentMapper.mapToDto(attachment);
     }
 
-    public AttachmentResponseDTO createAttachment(AttachmentRequestDTO dto) {
-        Ticket ticket = ticketRepository.findById(dto.getTicketId())
+    public AttachmentResponseDTO uploadFile(MultipartFile file, Long ticketId) throws IOException {
+        Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new ResourceNotFoundException("Ticket niet gevonden"));
-        Attachment attachment = attachmentMapper.mapToEntity(dto);
+
+        String uploadDir = "uploads/";
+        Path uploadPath = Paths.get(uploadDir);
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        String unqiueFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+
+        Path filePath = uploadPath.resolve(unqiueFileName);
+        Files.copy(file.getInputStream(), filePath);
+
+        Attachment attachment = new Attachment();
+        attachment.setFileName(file.getOriginalFilename());
+        attachment.setFileType(file.getContentType());
+        attachment.setFileSize(file.getSize());
+        attachment.setFilePath(filePath.toString());
+        attachment.setUploadDate(LocalDateTime.now());
         attachment.setTicket(ticket);
-        Attachment savedAttachment = attachmentRepository.save(attachment);
-        return attachmentMapper.mapToDto(savedAttachment);
+
+        Attachment saved = attachmentRepository.save(attachment);
+        return attachmentMapper.mapToDto(saved);
     }
 
     public List<AttachmentResponseDTO> getAttachmentsByTicketId(Long ticketId) {
