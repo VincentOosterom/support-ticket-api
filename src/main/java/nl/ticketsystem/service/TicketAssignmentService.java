@@ -40,11 +40,16 @@ public class TicketAssignmentService {
         return ticketAssignmentMapper.mapToDto(ticketAssignment);
     }
 
-    public TicketAssignmentResponseDTO createAssignment(TicketAssignmentRequestDTO dto) {
+    public TicketAssignmentResponseDTO createAssignment(TicketAssignmentRequestDTO dto, String keycloakId, boolean isAdmin) {
         Ticket ticket = ticketRepository.findById(dto.getTicketId())
                 .orElseThrow(() -> new ResourceNotFoundException("Ticket niet gevonden"));
         User agent = userRepository.findById(dto.getAgentId())
                 .orElseThrow(() -> new ResourceNotFoundException("Agent niet gevonden"));
+
+        if (!isAdmin && !agent.getKeycloakId().equals(keycloakId)) {
+            throw new RuntimeException("Een agent kan alleen zichzelf toewijzen");
+        }
+
         TicketAssignment ticketAssignment = ticketAssignmentMapper.mapToEntity(dto);
         ticketAssignment.setTicket(ticket);
         ticketAssignment.setAgent(agent);

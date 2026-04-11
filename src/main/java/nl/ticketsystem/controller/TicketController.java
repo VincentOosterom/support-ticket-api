@@ -13,6 +13,8 @@ import nl.ticketsystem.model.User;
 import nl.ticketsystem.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -83,9 +85,11 @@ public class TicketController {
     @PostMapping
     public ResponseEntity<TicketResponseDTO> createTicket(
             @RequestBody TicketRequestDTO dto,
-            @RequestParam Long userId) {
+            Authentication authentication) {
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String keycloakId = jwt.getSubject();
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ticketService.createTicket(dto, userId));
+                .body(ticketService.createTicket(dto, keycloakId));
     }
 
     @PutMapping("/{id}/status")

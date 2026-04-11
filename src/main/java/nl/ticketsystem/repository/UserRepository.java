@@ -1,5 +1,6 @@
 package nl.ticketsystem.repository;
 
+import nl.ticketsystem.dto.user.UserResponseDTO;
 import nl.ticketsystem.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -10,5 +11,8 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
+
     List<User> id(Long id);
+
+    Optional<User> findByKeycloakId(String keycloakId);
 }

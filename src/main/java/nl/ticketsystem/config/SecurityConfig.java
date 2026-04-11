@@ -37,23 +37,36 @@ public class SecurityConfig {
         return http
                 .httpBasic(hp -> hp.disable())
                 .csrf(csrf -> csrf.disable())
-                .cors(cors -> {})
+                .cors(cors -> {
+                })
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter())
                                 .decoder(jwtDecoder())
                         ))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.DELETE, "/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/users").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/users/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/users/sync").authenticated()
 
+                        .requestMatchers(HttpMethod.POST, "/tickets").hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.GET, "/tickets/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/tickets/**").hasAnyRole("AGENT", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/tickets/**").hasRole("ADMIN")
 
-                        .requestMatchers(HttpMethod.PUT, "/tickets/**").hasAnyRole("ADMIN", "AGENT")
+                        .requestMatchers(HttpMethod.POST, "/tickets/*/comments").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/tickets/*/comments/**").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.POST, "/attachments/**").hasAnyRole("CUSTOMER", "AGENT")
+                        .requestMatchers(HttpMethod.GET, "/attachments/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/attachments/**").hasRole("ADMIN")
+
                         .requestMatchers(HttpMethod.POST, "/ticket-assignments/**").hasAnyRole("ADMIN", "AGENT")
+                        .requestMatchers(HttpMethod.PUT, "/ticket-assignments/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/ticket-assignments/**").hasAnyRole("ADMIN", "AGENT")
+                        .requestMatchers(HttpMethod.DELETE, "/ticket-assignments/**").hasRole("ADMIN")
 
-
-                        .requestMatchers(HttpMethod.GET, "/**").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/ticket-history/**").authenticated()
 
                         .anyRequest().denyAll()
                 )
