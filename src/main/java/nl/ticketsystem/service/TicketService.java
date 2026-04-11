@@ -5,6 +5,7 @@ import nl.ticketsystem.dto.ticket.TicketResponseDTO;
 import nl.ticketsystem.exception.ResourceNotFoundException;
 import nl.ticketsystem.helpers.TicketStatusValidator;
 import nl.ticketsystem.mapper.TicketMapper;
+import nl.ticketsystem.model.Priority;
 import nl.ticketsystem.model.Ticket;
 import nl.ticketsystem.model.TicketStatus;
 import nl.ticketsystem.model.User;
@@ -53,6 +54,19 @@ public class TicketService {
     public List<TicketResponseDTO> getTicketByStatus(TicketStatus status) {
         return ticketMapper.mapToDto(ticketRepository.findByStatus(status));
     }
+
+    public List<TicketResponseDTO> getTicketByPriority(Priority priority) {
+        return ticketMapper.mapToDto(ticketRepository.findByPriority(priority));
+    }
+
+    public List<TicketResponseDTO> getTicketByUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User niet gevonden"));
+        return ticketMapper.mapToDto(ticketRepository.findByUser(user));
+    }
+
+
+
 
     public TicketResponseDTO updateTicketStatus(Long id, TicketStatus newStatus) {
         Ticket ticket = ticketRepository.findById(id)
