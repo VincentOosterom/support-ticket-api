@@ -7,7 +7,9 @@ import nl.ticketsystem.dto.ticket.TicketRequestDTO;
 import nl.ticketsystem.dto.ticket.TicketResponseDTO;
 import nl.ticketsystem.dto.ticket.TicketStatusUpdateDTO;
 import nl.ticketsystem.dto.ticket_assignment.TicketAssignmentResponseDTO;
+import nl.ticketsystem.model.Priority;
 import nl.ticketsystem.model.TicketStatus;
+import nl.ticketsystem.model.User;
 import nl.ticketsystem.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,6 +68,16 @@ public class TicketController {
     @GetMapping("/status/{status}")
     public ResponseEntity<List<TicketResponseDTO>> getTicketByStatus(@PathVariable TicketStatus status) {
         return ResponseEntity.ok(ticketService.getTicketByStatus(status));
+    }
+
+    @GetMapping("/priority/{priority}")
+    public ResponseEntity<List<TicketResponseDTO>> getTicketByPriority(@PathVariable Priority priority) {
+        return ResponseEntity.ok(ticketService.getTicketByPriority(priority));
+    }
+
+    @GetMapping("/users/{id}/tickets")
+    public ResponseEntity<List<TicketResponseDTO>> getTicketByUser(@PathVariable Long id) {
+        return ResponseEntity.ok(ticketService.getTicketByUser(id));
     }
 
     @PostMapping

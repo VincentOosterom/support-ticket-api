@@ -30,6 +30,12 @@ public class TicketAssignmentController {
         return ResponseEntity.ok(ticketAssignmentService.getAssignmentById(id));
     }
 
+    @GetMapping("/agent-id/{id}")
+    public ResponseEntity<List<TicketAssignmentResponseDTO>> getTicketByAgent(@PathVariable Long id) {
+        return ResponseEntity.ok(ticketAssignmentService.getTicketByAgent(id));
+
+    }
+
     @PutMapping("/ticket/{ticketId}")
     public ResponseEntity<TicketAssignmentResponseDTO> updateAssignment(@PathVariable Long ticketId, @RequestParam Long newAgentId) {
         return ResponseEntity.ok(ticketAssignmentService.updateAssignment(ticketId, newAgentId));
