@@ -22,19 +22,25 @@ public class Attachment {
     private Long fileSize;
 
     @Column(nullable = false)
+    private String filePath;
+
+    @Column(nullable = false)
     private LocalDateTime uploadDate;
 
     @ManyToOne
     @JoinColumn(name = "ticket_id", nullable = false)
     private Ticket ticket;
 
-    public Attachment(Long id, String fileName, String fileType, Long fileSize, LocalDateTime uploadDate, Ticket ticket) {
+
+    public Attachment(Long id, String fileName, String fileType, Long fileSize, LocalDateTime uploadDate, Ticket ticket, String filePath) {
         this.id = id;
         this.fileName = fileName;
         this.fileType = fileType;
         this.fileSize = fileSize;
         this.uploadDate = uploadDate;
         this.ticket = ticket;
+        this.filePath = filePath;
+
     }
 
     public Attachment() {
@@ -87,5 +93,13 @@ public class Attachment {
 
     public void setTicket(Ticket ticket) {
         this.ticket = ticket;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 }
