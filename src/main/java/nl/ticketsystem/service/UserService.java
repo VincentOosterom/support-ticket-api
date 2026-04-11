@@ -26,6 +26,19 @@ public class UserService {
         return userMapper.mapToDto(userRepository.findAll());
     }
 
+    public UserResponseDTO syncUser(String keycloakId, String name, String email) {
+        // Kijk of de user al bestaat
+        return userRepository.findByKeycloakId(keycloakId)
+                .map(userMapper::mapToDto)
+                .orElseGet(() -> {
+                    User newUser = new User();
+                    newUser.setKeycloakId(keycloakId);
+                    newUser.setName(name);
+                    newUser.setEmail(email);
+                    return userMapper.mapToDto(userRepository.save(newUser));
+                });
+    }
+
     public UserResponseDTO getUserById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User niet gevonden"));

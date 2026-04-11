@@ -13,6 +13,7 @@ import nl.ticketsystem.repository.TicketRepository;
 import nl.ticketsystem.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static nl.ticketsystem.model.TicketStatus.OPEN;
@@ -42,11 +43,13 @@ public class TicketService {
         return ticketMapper.mapToDto(ticket);
     }
 
-    public TicketResponseDTO createTicket(TicketRequestDTO dto, Long userId) {
-        User user = userRepository.findById(userId)
+    public TicketResponseDTO createTicket(TicketRequestDTO dto, String keycloakId) {
+        User user = userRepository.findByKeycloakId(keycloakId)
                 .orElseThrow(() -> new ResourceNotFoundException("User niet gevonden"));
         Ticket ticket = ticketMapper.mapToEntity(dto);
         ticket.setUser(user);
+        ticket.setStatus(TicketStatus.OPEN);
+        ticket.setCreatedAt(LocalDateTime.now());
         Ticket savedTicket = ticketRepository.save(ticket);
         return ticketMapper.mapToDto(savedTicket);
     }

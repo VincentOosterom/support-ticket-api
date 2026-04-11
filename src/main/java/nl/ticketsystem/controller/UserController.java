@@ -5,8 +5,11 @@ import nl.ticketsystem.dto.user.UserResponseDTO;
 import nl.ticketsystem.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.Authenticator;
 import java.util.List;
 
 @RestController
@@ -27,6 +30,15 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
+    }
+
+    @PostMapping("/sync")
+    public ResponseEntity<UserResponseDTO> syncUser(Authentication authentication) {
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String keycloakId = jwt.getSubject();
+        String name = jwt.getClaim("name");
+        String email = jwt.getClaim("email");
+        return ResponseEntity.ok(userService.syncUser(keycloakId, name, email));
     }
 
     @PostMapping
