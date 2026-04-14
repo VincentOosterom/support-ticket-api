@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 import static nl.ticketsystem.model.TicketStatus.OPEN;
 
@@ -39,15 +40,15 @@ public class TicketService {
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String keycloakId = jwt.getSubject();
         boolean isCustomer = authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_CUSTOMER"));
+                .anyMatch(a -> Objects.equals(a.getAuthority(), "ROLE_CUSTOMER"));
 
         if (isCustomer) {
             User user = userRepository.findByKeycloakId(keycloakId)
                     .orElseThrow(() -> new ResourceNotFoundException("User niet gevonden"));
-            return ticketMapper.mapToDto(ticketRepository.findByUser(user));
+            return ticketMapper.mapToDto(ticketRepository.findByUserAndStatusNot(user, TicketStatus.CLOSED));
         }
 
-        return ticketMapper.mapToDto(ticketRepository.findAll());
+        return ticketMapper.mapToDto(ticketRepository.findByStatusNot(TicketStatus.CLOSED));
     }
 
     public TicketResponseDTO getTicketById(Long id) {
@@ -67,7 +68,13 @@ public class TicketService {
         return ticketMapper.mapToDto(savedTicket);
     }
 
-    public List<TicketResponseDTO> getTicketByStatus(TicketStatus status) {
+    public List<TicketResponseDTO> getTicketByStatus(TicketStatus status, Authentication authentication) {
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> Objects.equals(a.getAuthority(), "ROLE_ADMIN"));
+
+        if (status == TicketStatus.CLOSED && !isAdmin) {
+            throw new RuntimeException("Alleen een admin mag gesloten tickets zien");
+        }
         return ticketMapper.mapToDto(ticketRepository.findByStatus(status));
     }
 
@@ -80,8 +87,6 @@ public class TicketService {
                 .orElseThrow(() -> new ResourceNotFoundException("User niet gevonden"));
         return ticketMapper.mapToDto(ticketRepository.findByUser(user));
     }
-
-
 
 
     public TicketResponseDTO updateTicketStatus(Long id, TicketStatus newStatus) {

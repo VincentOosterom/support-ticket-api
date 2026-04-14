@@ -68,8 +68,10 @@ public class TicketController {
     }
 
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<TicketResponseDTO>> getTicketByStatus(@PathVariable TicketStatus status) {
-        return ResponseEntity.ok(ticketService.getTicketByStatus(status));
+    public ResponseEntity<List<TicketResponseDTO>> getTicketByStatus(
+            @PathVariable TicketStatus status,
+            Authentication authentication) {
+        return ResponseEntity.ok(ticketService.getTicketByStatus(status, authentication));
     }
 
     @GetMapping("/priority/{priority}")

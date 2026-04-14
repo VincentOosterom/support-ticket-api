@@ -14,4 +14,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     List<Ticket> findByStatus(TicketStatus status);
     List<Ticket> findByPriority(Priority priority);
     List<Ticket> findByUser(User user);
+    List<Ticket> findByStatusNot(TicketStatus status);
+    List<Ticket> findByUserAndStatusNot(User user, TicketStatus status);
 }
