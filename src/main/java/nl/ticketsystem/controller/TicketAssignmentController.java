@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/ticket-assignments")
@@ -32,10 +33,11 @@ public class TicketAssignmentController {
         return ResponseEntity.ok(ticketAssignmentService.getAssignmentById(id));
     }
 
-    @GetMapping("/agent-id/{id}")
-    public ResponseEntity<List<TicketAssignmentResponseDTO>> getTicketByAgent(@PathVariable Long id) {
-        return ResponseEntity.ok(ticketAssignmentService.getTicketByAgent(id));
-
+    @GetMapping("/my-assignments")
+    public ResponseEntity<List<TicketAssignmentResponseDTO>> getMyAssignments(Authentication authentication) {
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String keycloakId = jwt.getSubject();
+        return ResponseEntity.ok(ticketAssignmentService.getMyAssignments(keycloakId));
     }
 
     @PutMapping("/ticket/{ticketId}")
@@ -51,7 +53,7 @@ public class TicketAssignmentController {
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String keycloakId = jwt.getSubject();
         boolean isAdmin = authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+                .anyMatch(a -> Objects.equals(a.getAuthority(), "ROLE_ADMIN"));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ticketAssignmentService.createAssignment(dto, keycloakId, isAdmin));
     }

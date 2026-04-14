@@ -61,8 +61,8 @@ public class TicketAssignmentService {
         return ticketAssignmentMapper.mapToDto(ticketAssignmentRepository.findByTicketId(ticketId));
     }
 
-    public List<TicketAssignmentResponseDTO> getTicketByAgent(Long agentId) {
-        User agent = userRepository.findById(agentId)
+    public List<TicketAssignmentResponseDTO> getMyAssignments(String keycloakId) {
+        User agent = userRepository.findByKeycloakId(keycloakId)
                 .orElseThrow(() -> new ResourceNotFoundException("Agent niet gevonden"));
         return ticketAssignmentMapper.mapToDto(ticketAssignmentRepository.findByAgent(agent));
     }
