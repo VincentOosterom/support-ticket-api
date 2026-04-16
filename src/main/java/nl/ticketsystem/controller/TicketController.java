@@ -102,8 +102,8 @@ public class TicketController {
     @PutMapping("/{id}/status")
     public ResponseEntity<TicketResponseDTO> updateTicketStatus(
             @PathVariable Long id,
-            @RequestBody TicketStatusUpdateDTO dto) {
-        return ResponseEntity.ok(ticketService.updateTicketStatus(id, dto.getStatus()));
+            @RequestBody TicketStatusUpdateDTO dto, Authentication authentication ) {
+        return ResponseEntity.ok(ticketService.updateTicketStatus(id, dto.getStatus(), authentication));
     }
 
     @DeleteMapping("/{id}")

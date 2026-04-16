@@ -54,6 +54,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/tickets/*/comments/**").hasRole("ADMIN")
 
                         .requestMatchers(HttpMethod.POST, "/tickets").hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.GET, "/tickets/stats").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/tickets/priority/**").hasAnyRole("AGENT", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/tickets/users/**").hasAnyRole("AGENT", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/tickets").authenticated()
