@@ -6,13 +6,15 @@ import nl.ticketsystem.exception.ResourceNotFoundException;
 import nl.ticketsystem.mapper.CommentMapper;
 import nl.ticketsystem.model.Comment;
 import nl.ticketsystem.model.Ticket;
+import nl.ticketsystem.model.TicketAssignment;
 import nl.ticketsystem.model.User;
-import nl.ticketsystem.repository.CommentRepository;
-import nl.ticketsystem.repository.TicketRepository;
-import nl.ticketsystem.repository.UserRepository;
+import nl.ticketsystem.repository.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class CommentService {
@@ -21,12 +23,14 @@ public class CommentService {
     private final UserRepository userRepository;
     private final TicketRepository ticketRepository;
     private final CommentMapper commentMapper;
+    private final TicketAssignmentRepository ticketAssignmentRepository;
 
-    public CommentService(CommentRepository commentRepository, UserRepository userRepository, TicketRepository ticketRepository, CommentMapper commentMapper) {
+    public CommentService(CommentRepository commentRepository, UserRepository userRepository, TicketRepository ticketRepository, CommentMapper commentMapper, TicketAssignmentRepository ticketAssignmentRepository) {
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
         this.ticketRepository = ticketRepository;
         this.commentMapper = commentMapper;
+        this.ticketAssignmentRepository = ticketAssignmentRepository;
     }
 
     public List<CommentResponseDTO>getAllComments() {
@@ -39,11 +43,22 @@ public class CommentService {
         return commentMapper.mapToDto(comment);
     }
 
-    public CommentResponseDTO createComment(CommentRequestDTO dto){
+    public CommentResponseDTO createComment(CommentRequestDTO dto, Authentication authentication){
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String keycloakId = jwt.getSubject();
+
         Ticket ticket = ticketRepository.findById(dto.getTicketId())
                 .orElseThrow(() -> new ResourceNotFoundException("Ticket niet gevonden"));
-        User user = userRepository.findById(dto.getUserId())
+
+        User user = userRepository.findByKeycloakId(keycloakId)
                 .orElseThrow(() -> new ResourceNotFoundException("User niet gevonden"));
+
+        boolean isAgent = authentication.getAuthorities().stream().anyMatch(a -> Objects.equals(a.getAuthority(), "ROLE_AGENT"));
+
+        if (isAgent && !ticketAssignmentRepository.existsByTicketAndAgent(ticket, user)) {
+            throw new RuntimeException("Agent is niet toegewezen aan dit ticket");
+        }
+
         Comment comment = commentMapper.mapToEntity(dto);
         comment.setTicket(ticket);
         comment.setUser(user);

@@ -50,6 +50,10 @@ public class TicketAssignmentService {
             throw new RuntimeException("Een agent kan alleen zichzelf toewijzen");
         }
 
+        if(ticketAssignmentRepository.existsByTicket(ticket)) {
+            throw new RuntimeException("Deze ticket is al toegewezen");
+        }
+
         TicketAssignment ticketAssignment = ticketAssignmentMapper.mapToEntity(dto);
         ticketAssignment.setTicket(ticket);
         ticketAssignment.setAgent(agent);

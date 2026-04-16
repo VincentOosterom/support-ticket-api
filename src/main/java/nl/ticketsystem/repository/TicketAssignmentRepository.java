@@ -17,4 +17,8 @@ public interface TicketAssignmentRepository extends JpaRepository<TicketAssignme
 
     List<TicketAssignment> findByAgent(User user);
 
+    boolean existsByTicket(Ticket ticket);
+
+    boolean existsByTicketAndAgent(Ticket ticket, User agent);
+
 }

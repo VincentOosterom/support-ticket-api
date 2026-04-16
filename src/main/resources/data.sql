@@ -11,25 +11,20 @@ INSERT INTO users (name, email, keycloak_id)
 VALUES ('Test Customer', 'customer@test.nl', 'fddc0ba4-d1dd-4696-8bf9-bcf34ce2f491')
     ON CONFLICT (email) DO NOTHING;
 
--- Tickets (user_id = 4 = customer)
+-- Tickets (user_id = 3 = customer, want nu begint het bij 1)
 INSERT INTO tickets (subject, description, status, priority, created_at, user_id)
-VALUES ('Internet werkt niet', 'Al 2 dagen geen internet', 'OPEN', 'HIGH', NOW(), 4)
-    ON CONFLICT DO NOTHING;
+VALUES ('Internet werkt niet', 'Al 2 dagen geen internet', 'OPEN', 'HIGH', NOW(), 3);
 
 INSERT INTO tickets (subject, description, status, priority, created_at, user_id)
-VALUES ('Laptop scherm flikkert', 'Scherm flikkert elke 5 minuten', 'IN_PROGRESS', 'MEDIUM', NOW(), 4)
-    ON CONFLICT DO NOTHING;
+VALUES ('Laptop scherm flikkert', 'Scherm flikkert elke 5 minuten', 'IN_PROGRESS', 'MEDIUM', NOW(), 3);
 
 INSERT INTO tickets (subject, description, status, priority, created_at, closed_at, user_id)
-VALUES ('Printer doet het niet', 'Printer reageert niet', 'CLOSED', 'LOW', NOW(), NOW(), 4)
-    ON CONFLICT DO NOTHING;
+VALUES ('Printer doet het niet', 'Printer reageert niet', 'CLOSED', 'LOW', NOW(), NOW(), 3);
 
--- Comments (user_id = 3 = agent)
+-- Comments (user_id = 2 = agent)
 INSERT INTO comments (message, created_at, ticket_id, user_id)
-VALUES ('We kijken ernaar!', NOW(), 1, 3)
-    ON CONFLICT DO NOTHING;
+VALUES ('We kijken ernaar!', NOW(), 1, 2);
 
--- Ticket assignments (agent_id = 3)
+-- Ticket assignments (agent_id = 2)
 INSERT INTO ticket_assignments (ticket_id, agent_id)
-VALUES (1, 3)
-    ON CONFLICT DO NOTHING;
+VALUES (1, 2);

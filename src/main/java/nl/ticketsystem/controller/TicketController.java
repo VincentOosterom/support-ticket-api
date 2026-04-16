@@ -1,6 +1,7 @@
 package nl.ticketsystem.controller;
 
 import nl.ticketsystem.dto.attachment.AttachmentResponseDTO;
+import nl.ticketsystem.dto.comment.CommentRequestDTO;
 import nl.ticketsystem.dto.comment.CommentResponseDTO;
 import nl.ticketsystem.dto.history.TicketHistoryResponseDTO;
 import nl.ticketsystem.dto.ticket.TicketRequestDTO;
@@ -97,6 +98,22 @@ public class TicketController {
         String keycloakId = jwt.getSubject();
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ticketService.createTicket(dto, keycloakId));
+    }
+
+    @PostMapping("/{id}/comments")
+    public ResponseEntity<CommentResponseDTO> createComment(
+            @PathVariable Long id,
+            @RequestBody CommentRequestDTO dto,
+            Authentication authentication) {
+        dto.setTicketId(id);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(commentService.createComment(dto, authentication));
+    }
+
+    @DeleteMapping("/{id}/comments/{commentId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) {
+        commentService.deleteComment(commentId);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}/status")

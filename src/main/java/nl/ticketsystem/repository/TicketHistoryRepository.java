@@ -1,5 +1,6 @@
 package nl.ticketsystem.repository;
 
+import nl.ticketsystem.model.Ticket;
 import nl.ticketsystem.model.TicketHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
