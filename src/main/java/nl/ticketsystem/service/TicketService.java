@@ -16,9 +16,11 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 
+import static nl.ticketsystem.model.TicketStatus.CLOSED;
 import static nl.ticketsystem.model.TicketStatus.OPEN;
 
 @Service
@@ -45,10 +47,10 @@ public class TicketService {
         if (isCustomer) {
             User user = userRepository.findByKeycloakId(keycloakId)
                     .orElseThrow(() -> new ResourceNotFoundException("User niet gevonden"));
-            return ticketMapper.mapToDto(ticketRepository.findByUserAndStatusNot(user, TicketStatus.CLOSED));
+            return ticketMapper.mapToDto(ticketRepository.findByUserAndStatusNot(user, CLOSED));
         }
 
-        return ticketMapper.mapToDto(ticketRepository.findByStatusNot(TicketStatus.CLOSED));
+        return ticketMapper.mapToDto(ticketRepository.findByStatusNot(CLOSED));
     }
 
     public TicketResponseDTO getTicketById(Long id) {
@@ -72,7 +74,7 @@ public class TicketService {
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(a -> Objects.equals(a.getAuthority(), "ROLE_ADMIN"));
 
-        if (status == TicketStatus.CLOSED && !isAdmin) {
+        if (status == CLOSED && !isAdmin) {
             throw new RuntimeException("Alleen een admin mag gesloten tickets zien");
         }
         return ticketMapper.mapToDto(ticketRepository.findByStatus(status));
@@ -95,12 +97,32 @@ public class TicketService {
 
         ticketStatusValidator.validate(ticket.getStatus(), newStatus);
 
+        if (newStatus == CLOSED) {
+            ticket.setClosedAt(LocalDateTime.now());
+        }
+
         ticket.setStatus(newStatus);
         return ticketMapper.mapToDto(ticketRepository.save(ticket));
     }
 
-
     public void deleteTicket(Long id) {
         ticketRepository.deleteById(id);
+    }
+
+    public double getAverageDaysToClose() {
+        List<Ticket> closedTickets = ticketRepository.findByStatus(TicketStatus.CLOSED);
+
+        if (closedTickets.isEmpty()) {
+            return 0;
+        }
+
+        long totalDays = 0;
+        for (Ticket ticket : closedTickets) {
+            if (ticket.getClosedAt() != null) {
+                totalDays += ChronoUnit.DAYS.between(ticket.getCreatedAt(), ticket.getClosedAt());
+            }
+        }
+
+        return (double) totalDays / closedTickets.size();
     }
 }

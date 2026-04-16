@@ -84,6 +84,11 @@ public class TicketController {
         return ResponseEntity.ok(ticketService.getTicketByUser(id));
     }
 
+    @GetMapping("/stats")
+    public ResponseEntity<Double> getAverageDaysToClose() {
+        return ResponseEntity.ok(ticketService.getAverageDaysToClose());
+    }
+
     @PostMapping
     public ResponseEntity<TicketResponseDTO> createTicket(
             @RequestBody TicketRequestDTO dto,

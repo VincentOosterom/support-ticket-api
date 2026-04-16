@@ -30,6 +30,9 @@ public class Ticket {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    @Column
+    private LocalDateTime closedAt;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -47,12 +50,13 @@ public class Ticket {
 
     }
 
-    public Ticket(Long id, String subject, String description, TicketStatus status, Priority priority, LocalDateTime createdAt, User user, List<Comment> comments, List<Attachment> attachments, List<TicketHistory> histories) {
+    public Ticket(Long id, String subject, String description, TicketStatus status, Priority priority, LocalDateTime createdAt, User user, List<Comment> comments, List<Attachment> attachments, List<TicketHistory> histories, LocalDateTime closedAt) {
         this.id = id;
         this.subject = subject;
         this.description = description;
         this.status = status;
         this.priority = priority;
+        this.closedAt = closedAt;
         this.createdAt = createdAt;
         this.user = user;
         this.comments = comments;
@@ -104,9 +108,13 @@ public class Ticket {
         return createdAt;
     }
 
+    public LocalDateTime getClosedAt() {return closedAt;}
+
     public void setCreatedAt(LocalDateTime localDateTime) {
         this.createdAt = localDateTime;
     }
+
+    public void setClosedAt(LocalDateTime localDateTime) {this.closedAt = localDateTime;}
 
     public User getUser() {
         return user;
