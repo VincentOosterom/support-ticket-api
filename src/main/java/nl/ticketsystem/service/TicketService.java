@@ -2,6 +2,7 @@ package nl.ticketsystem.service;
 
 import nl.ticketsystem.dto.ticket.TicketRequestDTO;
 import nl.ticketsystem.dto.ticket.TicketResponseDTO;
+import nl.ticketsystem.exception.InvalidStatusTransitionException;
 import nl.ticketsystem.exception.ResourceNotFoundException;
 import nl.ticketsystem.helpers.TicketStatusValidator;
 import nl.ticketsystem.mapper.TicketMapper;
@@ -122,7 +123,7 @@ public class TicketService {
         Ticket ticket = ticketRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ticket niet gevonden"));
 
         if (ticket.getStatus() != CLOSED) {
-            throw new RuntimeException("Ticket kan alleen verwijderd worden als het gesloten is");
+            throw new InvalidStatusTransitionException("Ticket kan alleen verwijderd worden als het gesloten is");
         }
         ticketRepository.deleteById(id);
     }

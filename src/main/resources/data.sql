@@ -13,10 +13,10 @@ VALUES ('Test Customer', 'customer@test.nl', 'fddc0ba4-d1dd-4696-8bf9-bcf34ce2f4
 
 -- Tickets (user_id = 3 = customer, want nu begint het bij 1)
 INSERT INTO tickets (subject, description, status, priority, created_at, user_id)
-VALUES ('Internet werkt niet', 'Al 2 dagen geen internet', 'OPEN', 'HIGH', NOW(), 3);
+VALUES ('Internet werkt niet', 'Al 2 dagen geen internet', 'IN_PROGRESS', 'HIGH', NOW(), 3);
 
 INSERT INTO tickets (subject, description, status, priority, created_at, user_id)
-VALUES ('Laptop scherm flikkert', 'Scherm flikkert elke 5 minuten', 'IN_PROGRESS', 'MEDIUM', NOW(), 3);
+VALUES ('Laptop scherm flikkert', 'Scherm flikkert elke 5 minuten', 'OPEN', 'MEDIUM', NOW(), 3);
 
 INSERT INTO tickets (subject, description, status, priority, created_at, closed_at, user_id)
 VALUES ('Printer doet het niet', 'Printer reageert niet', 'CLOSED', 'LOW', NOW(), NOW(), 3);

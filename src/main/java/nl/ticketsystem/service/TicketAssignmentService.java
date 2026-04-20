@@ -1,13 +1,11 @@
 package nl.ticketsystem.service;
 
-import nl.ticketsystem.dto.attachment.AttachmentResponseDTO;
+
 import nl.ticketsystem.dto.ticket_assignment.TicketAssignmentRequestDTO;
 import nl.ticketsystem.dto.ticket_assignment.TicketAssignmentResponseDTO;
 import nl.ticketsystem.exception.ResourceNotFoundException;
 import nl.ticketsystem.mapper.TicketAssignmentMapper;
-import nl.ticketsystem.model.Ticket;
-import nl.ticketsystem.model.TicketAssignment;
-import nl.ticketsystem.model.User;
+import nl.ticketsystem.model.*;
 import nl.ticketsystem.repository.TicketAssignmentRepository;
 import nl.ticketsystem.repository.TicketRepository;
 import nl.ticketsystem.repository.UserRepository;
@@ -57,6 +55,8 @@ public class TicketAssignmentService {
         TicketAssignment ticketAssignment = ticketAssignmentMapper.mapToEntity(dto);
         ticketAssignment.setTicket(ticket);
         ticketAssignment.setAgent(agent);
+        ticket.setStatus(TicketStatus.IN_PROGRESS);
+        ticketRepository.save(ticket);
         TicketAssignment savedAssignment = ticketAssignmentRepository.save(ticketAssignment);
         return ticketAssignmentMapper.mapToDto(savedAssignment);
     }
@@ -84,6 +84,13 @@ public class TicketAssignmentService {
     }
 
     public void deleteAssignment(Long id) {
+        TicketAssignment assignment = ticketAssignmentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Assignment met" + id + "niet gevonden" ));
+
+        Ticket ticket = assignment.getTicket();
+        ticket.setStatus(TicketStatus.OPEN);
+        ticketRepository.save(ticket);
+
+
         ticketAssignmentRepository.deleteById(id);
     }
 
