@@ -4,6 +4,7 @@ import nl.ticketsystem.model.TicketStatus;
 
 public class TicketHistoryRequestDTO {
 
+
     private TicketStatus newStatus;
     private TicketStatus oldStatus;
     private Long ticketId;

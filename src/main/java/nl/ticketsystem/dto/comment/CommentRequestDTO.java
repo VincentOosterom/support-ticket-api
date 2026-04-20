@@ -1,8 +1,14 @@
 package nl.ticketsystem.dto.comment;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class CommentRequestDTO {
 
+    @NotBlank(message = "Bericht mag niet leeg zijn")
+    @Size(max = 1000, message = "Bericht mag maximaal 1000 tekens zijn")
     private String message;
+
     private Long ticketId;
     private Long userId;
 

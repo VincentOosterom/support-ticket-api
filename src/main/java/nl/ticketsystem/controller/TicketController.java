@@ -1,5 +1,6 @@
 package nl.ticketsystem.controller;
 
+import jakarta.validation.Valid;
 import nl.ticketsystem.dto.attachment.AttachmentResponseDTO;
 import nl.ticketsystem.dto.comment.CommentRequestDTO;
 import nl.ticketsystem.dto.comment.CommentResponseDTO;
@@ -92,7 +93,7 @@ public class TicketController {
 
     @PostMapping
     public ResponseEntity<TicketResponseDTO> createTicket(
-            @RequestBody TicketRequestDTO dto,
+            @Valid @RequestBody TicketRequestDTO dto,
             Authentication authentication) {
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String keycloakId = jwt.getSubject();
@@ -101,9 +102,9 @@ public class TicketController {
     }
 
     @PostMapping("/{id}/comments")
-    public ResponseEntity<CommentResponseDTO> createComment(
+    public ResponseEntity<CommentResponseDTO    > createComment(
             @PathVariable Long id,
-            @RequestBody CommentRequestDTO dto,
+            @Valid @RequestBody CommentRequestDTO dto,
             Authentication authentication) {
         dto.setTicketId(id);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -119,7 +120,7 @@ public class TicketController {
     @PutMapping("/{id}/status")
     public ResponseEntity<TicketResponseDTO> updateTicketStatus(
             @PathVariable Long id,
-            @RequestBody TicketStatusUpdateDTO dto, Authentication authentication ) {
+            @Valid @RequestBody TicketStatusUpdateDTO dto, Authentication authentication) {
         return ResponseEntity.ok(ticketService.updateTicketStatus(id, dto.getStatus(), authentication));
     }
 

@@ -1,5 +1,6 @@
 package nl.ticketsystem.controller;
 
+import jakarta.validation.Valid;
 import nl.ticketsystem.dto.ticket_assignment.TicketAssignmentRequestDTO;
 import nl.ticketsystem.dto.ticket_assignment.TicketAssignmentResponseDTO;
 import nl.ticketsystem.model.TicketAssignment;
@@ -48,7 +49,7 @@ public class TicketAssignmentController {
 
     @PostMapping
     public ResponseEntity<TicketAssignmentResponseDTO> createAssignment(
-            @RequestBody TicketAssignmentRequestDTO dto,
+            @Valid @RequestBody TicketAssignmentRequestDTO dto,
             Authentication authentication) {
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String keycloakId = jwt.getSubject();
