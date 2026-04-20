@@ -27,7 +27,6 @@ public class UserService {
     }
 
     public UserResponseDTO syncUser(String keycloakId, String name, String email) {
-        // Kijk of de user al bestaat
         return userRepository.findByKeycloakId(keycloakId)
                 .map(userMapper::mapToDto)
                 .orElseGet(() -> {

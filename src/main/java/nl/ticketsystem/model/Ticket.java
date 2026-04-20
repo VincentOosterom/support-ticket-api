@@ -37,13 +37,13 @@ public class Ticket {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "ticket")
+    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
-    @OneToMany(mappedBy = "ticket")
+    @OneToMany(mappedBy = "ticket",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Attachment> attachments;
 
-    @OneToMany(mappedBy = "ticket")
+    @OneToMany(mappedBy = "ticket",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TicketHistory> histories;
 
     public Ticket() {
