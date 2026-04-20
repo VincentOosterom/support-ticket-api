@@ -119,6 +119,11 @@ public class TicketService {
     }
 
     public void deleteTicket(Long id) {
+        Ticket ticket = ticketRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ticket niet gevonden"));
+
+        if (ticket.getStatus() != CLOSED) {
+            throw new RuntimeException("Ticket kan alleen verwijderd worden als het gesloten is");
+        }
         ticketRepository.deleteById(id);
     }
 
