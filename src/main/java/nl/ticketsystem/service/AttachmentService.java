@@ -2,29 +2,40 @@ package nl.ticketsystem.service;
 
 import nl.ticketsystem.dto.attachment.AttachmentRequestDTO;
 import nl.ticketsystem.dto.attachment.AttachmentResponseDTO;
+import nl.ticketsystem.exception.FileTooLargeException;
+import nl.ticketsystem.exception.InvalidFileTypeException;
 import nl.ticketsystem.exception.ResourceNotFoundException;
 import nl.ticketsystem.mapper.AttachmentMapper;
 import nl.ticketsystem.model.Attachment;
 import nl.ticketsystem.model.Ticket;
 import nl.ticketsystem.repository.AttachmentRepository;
 import nl.ticketsystem.repository.TicketRepository;
+import org.apache.tomcat.util.http.fileupload.InvalidFileNameException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.InvalidPropertiesFormatException;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 public class AttachmentService {
-
     private final TicketRepository ticketRepository;
     private final AttachmentRepository attachmentRepository;
     private final AttachmentMapper attachmentMapper;
+
+    private static final List<String> ALLOWED_TYPES = List.of(
+            "image/png", "image/jepg", "application/pdf"
+    );
+
+    private static final long MAX_SIZE = 5 * 1024 * 1024;
+
 
     public AttachmentService(TicketRepository ticketRepository, AttachmentRepository attachmentRepository, AttachmentMapper attachmentMapper) {
         this.ticketRepository = ticketRepository;
@@ -43,6 +54,14 @@ public class AttachmentService {
     }
 
     public AttachmentResponseDTO uploadFile(MultipartFile file, Long ticketId) throws IOException {
+        if (!ALLOWED_TYPES.contains(file.getContentType())) {
+            throw new InvalidFileTypeException("Bestandstype niet toegestaan");
+        }
+
+        if (file.getSize() > MAX_SIZE) {
+            throw new FileTooLargeException("Bestand mag maximaal 5MB zijn");
+        }
+
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new ResourceNotFoundException("Ticket niet gevonden"));
 
