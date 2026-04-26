@@ -25,8 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -110,6 +109,28 @@ public class CommentServiceTest {
         when(ticketAssignmentRepository.existsByTicketAndAgent(ticket, agent)).thenReturn(true);
 
         assertThrows(RuntimeException.class, () -> commentService.createComment(dto, authentication));
+    }
+
+    @Test
+    void getAllComments_geeftLijst() {
+        // Arrange
+        when(commentRepository.findAll()).thenReturn(List.of());
+        when(commentMapper.mapToDto(List.of())).thenReturn(List.of());
+
+        // Act
+        List<CommentResponseDTO> result = commentService.getAllComments();
+
+        // Assert
+        assertNotNull(result);
+    }
+
+    @Test
+    void deleteComment() {
+        Long id = 22L;
+
+        commentService.deleteComment(id);
+
+        verify(commentRepository).deleteById(id);
     }
 
 }
