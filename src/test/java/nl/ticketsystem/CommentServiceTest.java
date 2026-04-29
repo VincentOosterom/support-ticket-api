@@ -133,4 +133,17 @@ public class CommentServiceTest {
         verify(commentRepository).deleteById(id);
     }
 
+    @Test
+    void getCommentsByTicketId() {
+
+        Long ticketId = 1L;
+
+        when(commentRepository.findByTicketId(ticketId)).thenReturn(List.of());
+        when(commentMapper.mapToDto(List.of())).thenReturn(List.of());
+
+        List<CommentResponseDTO> result = commentService.getCommentsByTicketId(ticketId);
+
+        assertNotNull(result);
+    }
+
 }
