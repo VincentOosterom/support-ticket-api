@@ -106,7 +106,7 @@ public class CommentServiceTest {
         when(userRepository.findByKeycloakId(keycloakId)).thenReturn(Optional.of(agent));
         when(ticketRepository.findById(ticketId)).thenReturn(Optional.of(ticket));
         doReturn(List.of(new SimpleGrantedAuthority("ROLE_AGENT"))).when(authentication).getAuthorities();
-        when(ticketAssignmentRepository.existsByTicketAndAgent(ticket, agent)).thenReturn(true);
+        when(ticketAssignmentRepository.existsByTicketAndAgent(ticket, agent)).thenReturn(false);
 
         assertThrows(RuntimeException.class, () -> commentService.createComment(dto, authentication));
     }
@@ -142,6 +142,39 @@ public class CommentServiceTest {
         when(commentMapper.mapToDto(List.of())).thenReturn(List.of());
 
         List<CommentResponseDTO> result = commentService.getCommentsByTicketId(ticketId);
+
+        assertNotNull(result);
+    }
+
+    @Test
+    void createComment_AgentAssignment() {
+
+        String keycloakId = "test-keycloak-id";
+        Long ticketId = 1L;
+
+        User agent = new User();
+        agent.setKeycloakId(keycloakId);
+
+        Ticket ticket = new Ticket();
+        ticket.setId(ticketId);
+
+        CommentRequestDTO dto = new CommentRequestDTO();
+        dto.setTicketId(ticketId);
+
+        Comment comment = new Comment();
+        CommentResponseDTO responseDTO = new CommentResponseDTO();
+
+        when(authentication.getPrincipal()).thenReturn(jwt);
+        when(jwt.getSubject()).thenReturn(keycloakId);
+        when(userRepository.findByKeycloakId(keycloakId)).thenReturn(Optional.of(agent));
+        when(ticketRepository.findById(ticketId)).thenReturn(Optional.of(ticket));
+        doReturn(List.of(new SimpleGrantedAuthority("ROLE_AGENT"))).when(authentication).getAuthorities();
+        when(ticketAssignmentRepository.existsByTicketAndAgent(ticket, agent)).thenReturn(true);
+        when(commentMapper.mapToEntity(dto)).thenReturn(comment);
+        when(commentRepository.save(comment)).thenReturn(comment);
+        when(commentMapper.mapToDto(comment)).thenReturn(responseDTO);
+
+        CommentResponseDTO result = commentService.createComment(dto, authentication);
 
         assertNotNull(result);
     }
