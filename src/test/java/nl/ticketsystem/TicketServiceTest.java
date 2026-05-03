@@ -44,12 +44,6 @@ public class TicketServiceTest {
     private UserRepository userRepository;
 
     @Mock
-    private TicketStatusValidator ticketStatusValidator;
-
-    @Mock
-    private TicketHistoryRepository ticketHistoryRepository;
-
-    @Mock
     private Jwt jwt;
 
     @Mock
