@@ -71,7 +71,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/ticket-assignments/**").hasAnyRole("ADMIN", "AGENT")
                         .requestMatchers(HttpMethod.DELETE, "/ticket-assignments/**").hasRole("ADMIN")
 
-                        .requestMatchers(HttpMethod.GET, "/ticket-history/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/ticket-history/**").hasRole("ADMIN")
 
                         .anyRequest().denyAll()
                 )
