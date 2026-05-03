@@ -48,7 +48,7 @@ public class TicketAssignmentService {
             throw new RuntimeException("Een agent kan alleen zichzelf toewijzen");
         }
 
-        if(ticketAssignmentRepository.existsByTicket(ticket)) {
+        if (ticketAssignmentRepository.existsByTicket(ticket)) {
             throw new RuntimeException("Deze ticket is al toegewezen");
         }
 
@@ -68,7 +68,7 @@ public class TicketAssignmentService {
     public List<TicketAssignmentResponseDTO> getMyAssignments(String keycloakId) {
         User agent = userRepository.findByKeycloakId(keycloakId)
                 .orElseThrow(() -> new ResourceNotFoundException("Agent niet gevonden"));
-        return ticketAssignmentMapper.mapToDto(ticketAssignmentRepository.findByAgent(agent));
+        return ticketAssignmentMapper.mapToDto(ticketAssignmentRepository.findByAgentAndTicket_StatusNot(agent,TicketStatus.CLOSED));
     }
 
     public TicketAssignmentResponseDTO updateAssignment(Long ticketId, Long newAgentId) {
@@ -84,7 +84,7 @@ public class TicketAssignmentService {
     }
 
     public void deleteAssignment(Long id) {
-        TicketAssignment assignment = ticketAssignmentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Assignment met" + id + "niet gevonden" ));
+        TicketAssignment assignment = ticketAssignmentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Assignment met" + id + "niet gevonden"));
 
         Ticket ticket = assignment.getTicket();
         ticket.setStatus(TicketStatus.OPEN);

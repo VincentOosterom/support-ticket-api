@@ -2,6 +2,7 @@ package nl.ticketsystem.repository;
 
 import nl.ticketsystem.model.Ticket;
 import nl.ticketsystem.model.TicketAssignment;
+import nl.ticketsystem.model.TicketStatus;
 import nl.ticketsystem.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -20,5 +21,7 @@ public interface TicketAssignmentRepository extends JpaRepository<TicketAssignme
     boolean existsByTicket(Ticket ticket);
 
     boolean existsByTicketAndAgent(Ticket ticket, User agent);
+
+    List<TicketAssignment> findByAgentAndTicket_StatusNot(User agent, TicketStatus status);
 
 }
