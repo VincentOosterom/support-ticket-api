@@ -10,7 +10,7 @@
     </parent>
     <groupId>nl.ticketsystem</groupId>
     <artifactId>ticketsystem</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0 Production</version>
     <name>support-ticket-api</name>
     <description>support-ticket-api</description>
     <url/>
