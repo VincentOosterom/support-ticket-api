@@ -46,11 +46,14 @@ public class Ticket {
     @OneToMany(mappedBy = "ticket",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TicketHistory> histories;
 
+    @OneToOne(mappedBy = "ticket", cascade = CascadeType.ALL, optional = true)
+    private TicketAssignment assignment;
+
     public Ticket() {
 
     }
 
-    public Ticket(Long id, String subject, String description, TicketStatus status, Priority priority, LocalDateTime createdAt, User user, List<Comment> comments, List<Attachment> attachments, List<TicketHistory> histories, LocalDateTime closedAt) {
+    public Ticket(Long id, String subject, String description, TicketStatus status, Priority priority, LocalDateTime createdAt, User user, List<Comment> comments, List<Attachment> attachments, List<TicketHistory> histories, LocalDateTime closedAt, TicketAssignment assignment) {
         this.id = id;
         this.subject = subject;
         this.description = description;
@@ -62,6 +65,7 @@ public class Ticket {
         this.comments = comments;
         this.attachments = attachments;
         this.histories = histories;
+        this.assignment = assignment;
     }
 
     public Long getId() {
@@ -146,5 +150,13 @@ public class Ticket {
 
     public void setHistories(List<TicketHistory> histories) {
         this.histories = histories;
+    }
+
+    public TicketAssignment getAssignment() {
+        return assignment;
+    }
+
+    public void setAssignment(TicketAssignment assignment) {
+        this.assignment = assignment;
     }
 }

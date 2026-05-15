@@ -11,7 +11,7 @@ public class TicketAssignment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "ticket_id", nullable = false)
     private Ticket ticket;
 
