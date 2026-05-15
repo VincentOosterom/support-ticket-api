@@ -1,5 +1,6 @@
 package nl.ticketsystem.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -74,6 +75,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/ticket-history/**").hasRole("ADMIN")
 
                         .anyRequest().denyAll()
+                )
+                .exceptionHandling(ex -> ex
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                            response.setContentType("application/json");
+                            response.getWriter().write("\"Je hebt geen toegang tot deze resource\"");
+                        })
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();

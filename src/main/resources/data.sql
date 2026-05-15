@@ -16,7 +16,7 @@ INSERT INTO tickets (subject, description, status, priority, created_at, user_id
 VALUES ('Internet werkt niet', 'Al 2 dagen geen internet', 'IN_PROGRESS', 'HIGH', NOW(), 3);
 
 INSERT INTO tickets (subject, description, status, priority, created_at, user_id)
-VALUES ('Laptop scherm flikkert', 'Scherm flikkert elke 5 minuten', 'OPEN', 'MEDIUM', NOW(), 3);
+VALUES ('Laptop scherm flikkert', 'Scherm flikkert elke 5 minuten', 'IN_PROGRESS', 'MEDIUM', NOW(), 3);
 
 INSERT INTO tickets (subject, description, status, priority, created_at, closed_at, user_id)
 VALUES ('Printer doet het niet', 'Printer reageert niet', 'CLOSED', 'LOW', NOW(), NOW(), 3);
