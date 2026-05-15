@@ -110,7 +110,6 @@ GRANT ALL PRIVILEGES ON DATABASE ticketsysteem TO ticketuser;
 mvn clean install
 
 ---
-
 ## Configuratie
 
 Maak een .env bestand aan in de root van het project:

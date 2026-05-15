@@ -44,6 +44,12 @@ public class TicketServiceTest {
     private UserRepository userRepository;
 
     @Mock
+    private TicketStatusValidator ticketStatusValidator;
+
+    @Mock
+    private TicketHistoryRepository ticketHistoryRepository;
+
+    @Mock
     private Jwt jwt;
 
     @Mock
@@ -301,6 +307,7 @@ public class TicketServiceTest {
         when(ticketRepository.findById(id)).thenReturn(Optional.of(ticket));
         when(ticketRepository.save(ticket)).thenReturn(ticket);
         when(ticketMapper.mapToDto(ticket)).thenReturn(responseDTO);
+        when(ticketHistoryRepository.save(any())).thenReturn(null);
 
         TicketResponseDTO result = ticketService.updateTicketStatus(id, TicketStatus.IN_PROGRESS, authentication);
 

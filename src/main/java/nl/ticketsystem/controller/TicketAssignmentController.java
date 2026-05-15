@@ -44,7 +44,6 @@ public class TicketAssignmentController {
     @PutMapping("/ticket/{ticketId}")
     public ResponseEntity<TicketAssignmentResponseDTO> updateAssignment(@PathVariable Long ticketId, @RequestParam Long newAgentId) {
         return ResponseEntity.ok(ticketAssignmentService.updateAssignment(ticketId, newAgentId));
-
     }
 
     @PostMapping
